@@ -1,3 +1,11 @@
 *{
     font-family: "DM Sans", serif;
+
 }
+body {
+    background-color: white;
+    color: black;
+}
+input:focus, textarea:focus {
+    outline: none;
+  }

@@ -6,7 +6,7 @@ import { FaTruck , FaUndo  } from "react-icons/fa";
 import Text from '../Text';
 const Guarantee = () => {
   return (
-    <div className='border-b-2 py-8'>
+    <div className='border-b-[1px] py-8'>
     <Container>
         <Flex className={'justify-between'}>
             <div className='w-1/3'>
