@@ -5,7 +5,7 @@ import Promotion from "../layouts/Promotion";
 import ProductsPart from "../layouts/ProductsPart";
 import Phone from "../layouts/Phone";
 import Offer from "../layouts/Offer";
-const HOME = () => {
+const Home = () => {
   return (
     <>
 
@@ -20,4 +20,4 @@ const HOME = () => {
   );
 };
 
-export default HOME;
+export default Home;
