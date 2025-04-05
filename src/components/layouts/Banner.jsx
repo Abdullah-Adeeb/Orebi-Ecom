@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const banner = "/src/assets/banner.png";
+const banner = "src/assets/banner.png";
 
 const Banner = () => {
   let [active, setActive] = useState(0);
