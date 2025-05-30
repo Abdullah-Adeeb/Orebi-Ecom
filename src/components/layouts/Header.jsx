@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Container from "../Container";
 import Image from "../Image";
 import Menu from "../Menu";
@@ -13,7 +13,11 @@ const Header = () => {
   const [show, setShow] = useState(false);
   const [bizli, setBizli] = useState(false);
   const [user, setUser] = useState(false);
-  
+
+  const categoryRef = useRef(null);
+  const bizliRef = useRef(null);
+  const userRef = useRef(null);
+
   const toggleShow = () => {
     setShow(!show);
   };
@@ -21,9 +25,34 @@ const Header = () => {
   const toggleBizli = () => {
     setBizli(!bizli);
   };
+
   const toggleUser = () => {
     setUser(!user);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        categoryRef.current &&
+        !categoryRef.current.contains(e.target) &&
+        (!bizliRef.current || !bizliRef.current.contains(e.target))
+      ) {
+        setShow(false);
+      }
+
+      if (bizliRef.current && !bizliRef.current.contains(e.target)) {
+        setBizli(false);
+      }
+
+      if (userRef.current && !userRef.current.contains(e.target)) {
+        setUser(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <>
       <div>
@@ -46,7 +75,6 @@ const Header = () => {
                     Shop
                   </li>
                 </Link>
-
                 <Link to={"/about"}>
                   <li className="px-4 text-[14px] text-[#767676] hover:text-[#262626] hover:text-[16px] hover:font-bold">
                     About
@@ -62,6 +90,7 @@ const Header = () => {
             <div className="w-[30%]"></div>
           </Flex>
         </Container>
+
         <div className="bg-[#F5F5F3] py-6 relative">
           <Container>
             <Flex className={"justify-between items-center"}>
@@ -74,8 +103,18 @@ const Header = () => {
                     text={"Sort By Category"}
                   />
                 </Flex>
+
                 {show && (
-                  <div className="absolute top-[90px] left-[250px] z-50 bg-black p-4 w-[260px]">
+                  <div
+                    ref={categoryRef}
+                    className="absolute top-[90px] left-[250px] z-50 bg-black p-4 w-[260px]"
+                  >
+                    <button
+                      onClick={() => setShow(false)}
+                      className="absolute text-2xl text-white top-2 right-2 hover:text-red-500"
+                    >
+                      &times;
+                    </button>
                     <ul>
                       <li className="text-[14px] text-[#767676] py-3 hover:font-bold hover:pl-2 hover:text-white hover:duration-300">
                         Accesories
@@ -101,231 +140,48 @@ const Header = () => {
                     </ul>
                   </div>
                 )}
+
                 {bizli && (
-                  <div className="w-[545px] p-8 shadow-xl bg-gray-50 absolute top-[70px] left-[520px] z-50">
+                  <div
+                    ref={bizliRef}
+                    className="w-[545px] p-8 shadow-xl bg-gray-50 absolute top-[70px] left-[520px] z-50"
+                  >
+                    <button
+                      onClick={() => setBizli(false)}
+                      className="absolute text-2xl text-black top-2 right-2 hover:text-red-500"
+                    >
+                      &times;
+                    </button>
                     <Flex className={"justify-between"}>
                       <div>
-                        <Text
-                          as={"h5"}
-                          className={
-                            "text-[16px] text-[#262626] pb-2 font-bold"
-                          }
-                          text={"Phones"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Phone 1"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Phone 2"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Phone 3"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Phone 4"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Phone 5"}
-                        />
+                        <Text as={"h5"} className={"text-[16px] text-[#262626] pb-2 font-bold"} text={"Phones"} />
+                        {["Phone 1", "Phone 2", "Phone 3", "Phone 4", "Phone 5"].map((item) => (
+                          <Text key={item} as={"p"} className={"text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"} text={item} />
+                        ))}
                       </div>
                       <div>
-                        <Text
-                          as={"h5"}
-                          className={
-                            "text-[16px] text-[#262626] pb-2 font-bold"
-                          }
-                          text={"Computers"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Computer 1"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Computer 2"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Computer 3"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Computer 4"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Computer 5"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Computer 6"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Computer 7"}
-                        />
+                        <Text as={"h5"} className={"text-[16px] text-[#262626] pb-2 font-bold"} text={"Computers"} />
+                        {["Computer 1", "Computer 2", "Computer 3", "Computer 4", "Computer 5", "Computer 6", "Computer 7"].map((item) => (
+                          <Text key={item} as={"p"} className={"text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"} text={item} />
+                        ))}
                       </div>
                       <div>
-                        <Text
-                          as={"h5"}
-                          className={
-                            "text-[16px] text-[#262626] pb-2 font-bold"
-                          }
-                          text={"Smart Watches"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Smart Watch 1"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Smart Watch 2"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Smart Watch 3"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Smart Watch 4"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Smart Watch 5"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Smart Watch 6"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Smart Watch 7"}
-                        />
+                        <Text as={"h5"} className={"text-[16px] text-[#262626] pb-2 font-bold"} text={"Smart Watches"} />
+                        {["Smart Watch 1", "Smart Watch 2", "Smart Watch 3", "Smart Watch 4", "Smart Watch 5", "Smart Watch 6", "Smart Watch 7"].map((item) => (
+                          <Text key={item} as={"p"} className={"text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"} text={item} />
+                        ))}
                       </div>
                       <div>
-                        <Text
-                          as={"h5"}
-                          className={
-                            "text-[16px] text-[#262626] pb-2 font-bold"
-                          }
-                          text={"Cameras"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Camera 1"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Camera 2"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Camera 3"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Camera 4"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Camera 5"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Camera 6"}
-                        />
-                        <Text
-                          as={"p"}
-                          className={
-                            "text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"
-                          }
-                          text={"Camera 7"}
-                        />
+                        <Text as={"h5"} className={"text-[16px] text-[#262626] pb-2 font-bold"} text={"Cameras"} />
+                        {["Camera 1", "Camera 2", "Camera 3", "Camera 4", "Camera 5", "Camera 6", "Camera 7"].map((item) => (
+                          <Text key={item} as={"p"} className={"text-[14px] text-[#767676] py-2 hover:text-[#262626] hover:font-bold"} text={item} />
+                        ))}
                       </div>
                     </Flex>
                   </div>
                 )}
               </div>
+
               <div className="w-[40%] relative">
                 <input
                   type="text"
@@ -334,6 +190,7 @@ const Header = () => {
                 />
                 <FaSearch className={"absolute top-5 right-5"} />
               </div>
+
               <div className="w-[30%] right-2 relative">
                 <Flex className={"justify-end gap-5"}>
                   <div className="flex gap-x-2" onClick={toggleUser}>
@@ -344,39 +201,32 @@ const Header = () => {
                     <FaShoppingCart />
                   </div>
                 </Flex>
+
                 {user && (
-                  <div className="w-[200px] shadow-xl absolute top-[60px] right-[100px] z-50 bg-gray-50">
-                    <div className="text-center ">
+                  <div
+                    ref={userRef}
+                    className="w-[200px] shadow-xl absolute top-[60px] right-[100px] z-50 bg-gray-50 pt-8"
+                  >
+                    <button
+                      onClick={() => setUser(false)}
+                      className="absolute top-0 z-10 pb-2 text-2xl text-black right-4 hover:text-red-500"
+                    >
+                      &times;
+                    </button>
+                    <div className="text-center">
                       <Link to="/myAccount">
-                      <Text
-                        as={"p"}
-                        className={
-                          "text-[14px] text-[#262626] px-12 py-6 hover:bg-black hover:text-white hover:font-bold hover:duration-300"
-                        }
-                        text={"My Account"}
-                      />
+                        <Text as={"p"} className={"text-[14px] text-[#262626] px-12 py-6 hover:bg-black hover:text-white hover:font-bold hover:duration-300"} text={"My Account"} />
                       </Link>
                     </div>
-                    <div className="text-center ">
+                    <div className="text-center">
                       <Link to="/signup">
-                      <Text
-                        as={"p"}
-                        className={
-                          "text-[14px] text-[#262626] px-12 py-6 hover:bg-black hover:text-white hover:font-bold hover:duration-300"
-                        }
-                        text={"Sign-Up"}
-                      /></Link>
+                        <Text as={"p"} className={"text-[14px] text-[#262626] px-12 py-6 hover:bg-black hover:text-white hover:font-bold hover:duration-300"} text={"Sign-Up"} />
+                      </Link>
                     </div>
-                    <div className="text-center ">
-                     <Link to="/login">
-                     <Text
-                        as={"p"}
-                        className={
-                          "text-[14px] text-[#262626] px-12 py-6 hover:bg-black hover:text-white hover:font-bold hover:duration-300"
-                        }
-                        text={"Log-In"}
-                      />
-                     </Link>
+                    <div className="text-center">
+                      <Link to="/login">
+                        <Text as={"p"} className={"text-[14px] text-[#262626] px-12 py-6 hover:bg-black hover:text-white hover:font-bold hover:duration-300"} text={"Log-In"} />
+                      </Link>
                     </div>
                   </div>
                 )}
